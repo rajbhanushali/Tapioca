@@ -17,4 +17,23 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:onClick="handleReadBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Service"
+        android:id="@+id/start"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="run"
+        android:layout_marginTop="51dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Service"
+        android:id="@+id/stop"
+        android:onClick="stop"
+        android:layout_below="@+id/start"
+        android:layout_alignStart="@+id/readbtn" />
 </RelativeLayout>

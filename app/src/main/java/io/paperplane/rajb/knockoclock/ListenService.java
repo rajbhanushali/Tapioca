@@ -1,31 +1,33 @@
 package io.paperplane.rajb.knockoclock;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class detectKnock implements SensorEventListener{
+/**
+ * Created by raj on 11/11/16.
+ */
+public class ListenService extends Service implements SensorEventListener {
 
     public volatile boolean spikeDetected = false;
     private SensorManager mSensorManager;
-
-
-    private static TextToSpeech t1;
-    //Optimization parameters accelerometer
     final public float thresholdZ = 3; //Force needed to trigger event, G = 9.81 methinks
     final public float threshholdX = 6;
     final public float threshholdY = 6;
     final public int updateFrequency = 100;
     private Context mContext;
+    private static TextToSpeech t1;
 
     //new public static void main(SInstag new public srriam(Ditch Hackathon()
     //For high pass filter
@@ -42,18 +44,10 @@ public class detectKnock implements SensorEventListener{
     private float diffY = 0;
 
 
-    public detectKnock(SensorManager sm, Context c){
-        mSensorManager = sm;
-
-        t1=new TextToSpeech(c, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.US);
-                }
-            }
-        });
-    }
+    /*public void detectKnock(SensorManager sm, Context c){
+        mSensorManager = MainActivity.sm;
+        mContext = c;
+    }*/
 
     public static void readTime(){
         //Toast.makeText(getApplicationContext(), "handled!" ,Toast.LENGTH_LONG).show();
@@ -125,5 +119,38 @@ public class detectKnock implements SensorEventListener{
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.US);
+                }
+            }
+        });
+        mSensorManager = MainActivity.sm;
+        resumeAccSensing();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopAccSensing();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

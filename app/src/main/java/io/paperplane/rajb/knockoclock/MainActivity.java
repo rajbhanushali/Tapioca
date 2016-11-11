@@ -16,27 +16,17 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private static TextToSpeech t1;
-    private detectKnock dk;
+    public static SensorManager sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.US);
-                }
-            }
-        });
-
-        dk = new detectKnock((SensorManager) getSystemService(Context.SENSOR_SERVICE));
-        dk.resumeAccSensing();
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
-    public static void readTime(){
+    /*public static void readTime(){
         //Toast.makeText(getApplicationContext(), "handled!" ,Toast.LENGTH_LONG).show();
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int minute = Calendar.getInstance().get(Calendar.MINUTE);
@@ -59,18 +49,28 @@ public class MainActivity extends AppCompatActivity {
         }
         //Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-    }
+    }*/
 
     @Override
     public void onPause(){
         super.onPause();
-        dk.stopAccSensing();
+       // dk.stopAccSensing();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        dk.resumeAccSensing();
+      //  dk.resumeAccSensing();
+    }
+
+    public void run(View v){
+        Intent intent = new Intent(this, ListenService.class);
+        startService(intent);
+    }
+
+    public void stop(View v){
+        Intent intent = new Intent(this, ListenService.class);
+        stopService(intent);
     }
 
 }
