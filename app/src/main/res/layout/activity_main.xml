@@ -12,28 +12,53 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Read Me The Time Pls"
-        android:id="@+id/readbtn"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="handleReadBtn"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Service"
+        android:text="Enable Tapioca"
         android:id="@+id/start"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:onClick="run"
-        android:layout_marginTop="51dp" />
+        android:theme="@style/AppTheme.Button"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stop Service"
+        android:text="Disable Tapioca"
         android:id="@+id/stop"
+        android:theme="@style/AppTheme.Button"
         android:onClick="stop"
         android:layout_below="@+id/start"
-        android:layout_alignStart="@+id/readbtn" />
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/clockicon"
+        android:scaleType="fitCenter"
+        android:maxHeight="100dp"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome To Tapioca!"
+        android:id="@+id/textView"
+        android:textSize="30dp"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grant Notification Access"
+        android:theme="@style/AppTheme.Button"
+        android:id="@+id/notif"
+        android:onClick="notifPerms"
+        android:layout_below="@+id/stop"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -1,13 +1,21 @@
 package io.paperplane.rajb.knockoclock;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -23,8 +31,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView myTextView=(TextView)findViewById(R.id.textView);
+        Typeface typeFace= Typeface.createFromAsset(getAssets(),"RobotoCondensed-Light.ttf");
+        myTextView.setTypeface(typeFace);
+
+
+
+
+
+
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
+
+
 
     /*public static void readTime(){
         //Toast.makeText(getApplicationContext(), "handled!" ,Toast.LENGTH_LONG).show();
@@ -73,4 +92,15 @@ public class MainActivity extends AppCompatActivity {
         stopService(intent);
     }
 
+    public void notifPerms(View v){
+        Intent intent = new Intent(
+                "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+        startActivity(intent);
+    }
+
+
 }
+
+
+
+

@@ -1,13 +1,18 @@
 package io.paperplane.rajb.knockoclock;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.service.notification.NotificationListenerService;
+import android.service.notification.StatusBarNotification;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,15 +27,15 @@ public class ListenService extends Service implements SensorEventListener {
 
     public volatile boolean spikeDetected = false;
     private SensorManager mSensorManager;
-    final public float thresholdZ = 3; //Force needed to trigger event, G = 9.81 methinks
+    final public float thresholdZ = 3;
     final public float threshholdX = 6;
     final public float threshholdY = 6;
     final public int updateFrequency = 100;
     private Context mContext;
     private static TextToSpeech t1;
+    private ServiceConnection sc;
 
-    //new public static void main(SInstag new public srriam(Ditch Hackathon()
-    //For high pass filter
+
     private float prevZVal = 0;
     private float currentZVal = 0;
     private float diffZ = 0;
@@ -43,11 +48,6 @@ public class ListenService extends Service implements SensorEventListener {
     private float currentYVal = 0;
     private float diffY = 0;
 
-
-    /*public void detectKnock(SensorManager sm, Context c){
-        mSensorManager = MainActivity.sm;
-        mContext = c;
-    }*/
 
     public static void readTime(){
         //Toast.makeText(getApplicationContext(), "handled!" ,Toast.LENGTH_LONG).show();
@@ -70,7 +70,6 @@ public class ListenService extends Service implements SensorEventListener {
         else{
             toSpeak = "The time is " + hour + " " + minute + " " + ampm;
         }
-        //Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
@@ -97,7 +96,7 @@ public class ListenService extends Service implements SensorEventListener {
         diffZ = currentZVal - prevZVal;
 
         //Z force must be above some limit, the other forces below some limit to filter out shaking motions
-        if (currentZVal > prevZVal && diffZ > thresholdZ && diffX < threshholdX && diffY < threshholdY){
+        if (currentZVal > prevZVal && diffZ > thresholdZ && diffX < threshholdX && diffY < threshholdY && currentXVal < 1 && currentYVal < 1){
             accTapEvent();
         }
 
@@ -107,6 +106,10 @@ public class ListenService extends Service implements SensorEventListener {
         Log.d("acceltap","single tap event detected!");
         spikeDetected = true;
         readTime();
+        NotificationListener nl = new NotificationListener();
+        NotificationListener.NLServiceReceiver nls = new NotificationListener.NLServiceReceiver();
+        Log.d("DEBUG", nl.getActiveNotifications()+"");
+
     }
 
     private float abs(float f) {
@@ -133,6 +136,17 @@ public class ListenService extends Service implements SensorEventListener {
             }
         });
         mSensorManager = MainActivity.sm;
+        sc = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
         resumeAccSensing();
 
     }
@@ -154,3 +168,5 @@ public class ListenService extends Service implements SensorEventListener {
         return null;
     }
 }
+
+
